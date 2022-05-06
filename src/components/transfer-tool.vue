@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref, defineProps } from "vue";
 
-defineProps<{
+const props = defineProps<{
   addressTo?: string;
 }>();
 
