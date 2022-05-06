@@ -4,7 +4,7 @@ import transferToolVue from "./components/transfer-tool.vue";
 
 <template>
   <div>
-    <transfer-tool-vue></transfer-tool-vue>
+    <router-view />
   </div>
 </template>
 
