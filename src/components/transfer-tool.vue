@@ -1,42 +1,50 @@
 <script lang="ts" setup>
-import { reactive, ref, defineProps } from "vue";
+import { reactive, ref } from "vue";
+import { NCard, NSelect, NInput, NInputNumber, NButton } from "naive-ui";
 
 const props = defineProps<{
   addressTo?: string;
 }>();
 
-interface coinType {
-  type: string;
-  function: Function;
-}
-
-const CoinType = reactive<Array<coinType>>([
+const options = reactive([
   {
-    type: "ETH",
-    function: () => {},
+    label: "ETH",
+    value: "eth",
   },
   {
-    type: "CDR",
-    function: () => {},
+    label: "CDR",
+    value: "cdr",
   },
 ]);
 
+const isConnect = false;
+const walletAddress = ref("");
+
 const Selected = ref("");
+const TargetAddress = props.addressTo;
+const Value = ref(0);
 </script>
 
 <template>
-  <div class="transferTool">
+  <n-card class="transferTool">
     <h1>CRY<span>SEND</span></h1>
-    <select v-model="Selected" name="cointype" id="cointype">
-      <option v-for="i in CoinType" :value="i.type">{{ i.type }}</option>
-    </select>
-  </div>
+    <n-input
+      v-model:value="TargetAddress"
+      type="text"
+      placeholder="Target Address"
+    />
+    <n-select v-model:value="Selected" :options="options"></n-select>
+    <n-input-number v-model:value="Value" placeholder="Value" />
+    <div class="wallet">
+      <p v-if="isConnect">{{ walletAddress }}</p>
+      <n-button v-else></n-button>
+    </div>
+  </n-card>
 </template>
 
 <style lang="scss">
 .transferTool {
   padding: 10px 15px;
-  background-color: #ffffff;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -49,22 +57,7 @@ const Selected = ref("");
     color: #2359ec;
     margin-bottom: 10px;
     span {
-      color: #353535;
-    }
-  }
-
-  select {
-    width: 100%;
-    background-color: #1f1f1f;
-    border: 1px solid transparent;
-    color: #ffffff;
-    border-radius: 5px;
-    padding: 3px 10px;
-    font-size: 1rem;
-    transition: border 0.2s ease-in-out;
-
-    &:focus {
-      border: 1px solid #2359ec;
+      color: #ffffff;
     }
   }
 }

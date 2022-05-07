@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import transferToolVue from "./components/transfer-tool.vue";
+import { NConfigProvider, darkTheme } from "naive-ui";
 </script>
 
 <template>
-  <div>
-    <router-view />
-  </div>
+  <n-config-provider :theme="darkTheme">
+    <router-view></router-view>
+  </n-config-provider>
 </template>
 
 <style lang="scss">
