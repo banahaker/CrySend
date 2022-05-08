@@ -9,7 +9,7 @@ import {
   NButton,
   NInputGroup,
 } from "naive-ui";
-import { connectWallet, getAddress, sendETH } from "../walletApi";
+import { connectWallet, getAddress, sendETH, sendCDR } from "../walletApi";
 
 const props = defineProps<{
   addressTo?: string;
@@ -82,7 +82,27 @@ function send() {
         });
       })
       .catch((err) => {
-        console.log(err);
+        DG.error({
+          title: "Error",
+          content: err.message,
+          positiveText: "OK!",
+        });
+      });
+  } else if (Selected.value == "cdr") {
+    sendCDR(Value.value, TargetAddress.value)
+      .then((data) => {
+        DG.success({
+          title: "Error",
+          content: "Please type the transaction information",
+          positiveText: "OK!",
+        });
+      })
+      .catch((err) => {
+        DG.error({
+          title: "Error",
+          content: err.message,
+          positiveText: "OK!",
+        });
       });
   }
 }

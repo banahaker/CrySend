@@ -1,3 +1,4 @@
 import { sendETH } from "./chains/eth";
+import { sendCDR } from "./chains/cdr";
 
-export { sendETH };
+export { sendETH, sendCDR };
