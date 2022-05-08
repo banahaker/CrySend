@@ -1,6 +1,15 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
-import { NCard, NSelect, NInput, NInputNumber, NButton } from "naive-ui";
+import { useDialog } from "naive-ui";
+import {
+  NCard,
+  NSelect,
+  NInput,
+  NInputNumber,
+  NButton,
+  NInputGroup,
+} from "naive-ui";
+import { connectWallet, getAddress } from "../walletApi";
 
 const props = defineProps<{
   addressTo?: string;
@@ -16,13 +25,36 @@ const options = reactive([
     value: "cdr",
   },
 ]);
-
-const isConnect = false;
+const DG = useDialog();
+const isConnected = ref<boolean>(false);
 const walletAddress = ref("");
-
 const Selected = ref("");
 const TargetAddress = props.addressTo;
 const Value = ref(0);
+function connect() {
+  connectWallet()
+    .then((_) => {
+      getAddress()
+        .then((res) => {
+          walletAddress.value = res;
+          isConnected.value = true;
+        })
+        .catch((err) => {
+          DG.error({
+            title: "Error",
+            content: err.message,
+            positiveText: "OK!",
+          });
+        });
+    })
+    .catch((err) => {
+      DG.error({
+        title: "Error",
+        content: err.message,
+        positiveText: "OK!",
+      });
+    });
+}
 </script>
 
 <template>
@@ -32,12 +64,20 @@ const Value = ref(0);
       v-model:value="TargetAddress"
       type="text"
       placeholder="Target Address"
+      class="input"
     />
-    <n-select v-model:value="Selected" :options="options"></n-select>
-    <n-input-number v-model:value="Value" placeholder="Value" />
+    <n-select
+      class="input"
+      v-model:value="Selected"
+      :options="options"
+    ></n-select>
+    <n-input-number class="input" v-model:value="Value" placeholder="Value" />
     <div class="wallet">
-      <p v-if="isConnect">{{ walletAddress }}</p>
-      <n-button v-else></n-button>
+      <n-input-group v-if="isConnected">
+        <n-button>Transfer</n-button>
+        <n-input disabled v-model:value="walletAddress"></n-input>
+      </n-input-group>
+      <n-button v-else @click="connect">Connect to wallet</n-button>
     </div>
   </n-card>
 </template>
@@ -45,12 +85,13 @@ const Value = ref(0);
 <style lang="scss">
 .transferTool {
   padding: 10px 15px;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 300px;
+  width: 600px;
+  max-width: 85vw;
   max-width: 90vw;
+
+  .input {
+    margin-bottom: 15px;
+  }
 
   h1 {
     font-size: 1.5rem;
@@ -58,6 +99,12 @@ const Value = ref(0);
     margin-bottom: 10px;
     span {
       color: #ffffff;
+    }
+  }
+  .wallet {
+    p {
+      color: #2359ec;
+      font-size: 1rem;
     }
   }
 }

@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import { NConfigProvider, darkTheme } from "naive-ui";
+import { NConfigProvider, darkTheme, NDialogProvider } from "naive-ui";
 </script>
 
 <template>
   <n-config-provider :theme="darkTheme">
-    <router-view></router-view>
+    <n-dialog-provider>
+      <router-view></router-view>
+    </n-dialog-provider>
   </n-config-provider>
 </template>
 

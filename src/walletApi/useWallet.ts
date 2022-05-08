@@ -1,5 +1,4 @@
 import { connectWallet } from "./Wallet/connect";
+import { getAddress } from "./Wallet/address";
 
-export function useWallet() {
-  connectWallet;
-}
+export { connectWallet, getAddress };

@@ -14,18 +14,12 @@ export interface MetaMaskProvider extends providers.ExternalProvider {
 }
 
 export const connectWallet = async () => {
-  const isWalletInstalled = window.ethereum.isMetamaskInstalled;
   const provider = (await detectEthereumProvider()) as MetaMaskProvider;
-  if (isWalletInstalled) {
-    try {
-      await provider.request({
-        method: "eth_requestAccounts",
-        params: [{ eth_accounts: {} }],
-      });
-    } catch (error) {
-      return error as string;
-    }
-  } else {
+  if (typeof window.ethereum === "undefined") {
     return "Please install MetaMask";
   }
+  const result = await provider.request({
+    method: "eth_requestAccounts",
+    params: [{ eth_accounts: {} }],
+  });
 };
