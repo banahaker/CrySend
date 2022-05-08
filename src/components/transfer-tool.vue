@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, toRef } from "vue";
 import { useDialog } from "naive-ui";
 import {
   NCard,
@@ -9,7 +9,7 @@ import {
   NButton,
   NInputGroup,
 } from "naive-ui";
-import { connectWallet, getAddress } from "../walletApi";
+import { connectWallet, getAddress, sendETH } from "../walletApi";
 
 const props = defineProps<{
   addressTo?: string;
@@ -29,7 +29,10 @@ const DG = useDialog();
 const isConnected = ref<boolean>(false);
 const walletAddress = ref("");
 const Selected = ref("");
-const TargetAddress = props.addressTo;
+const TargetAddress = ref("");
+if (props.addressTo !== undefined) {
+  TargetAddress.value = props.addressTo;
+}
 const Value = ref(0);
 function connect() {
   connectWallet()
@@ -55,6 +58,34 @@ function connect() {
       });
     });
 }
+function send() {
+  if (
+    Selected.value === "" ||
+    TargetAddress === undefined ||
+    TargetAddress.value === "" ||
+    Value.value === 0
+  ) {
+    DG.error({
+      title: "Error",
+      content: "Please type the transaction information",
+      positiveText: "OK!",
+    });
+    return false;
+  }
+  if (Selected.value === "eth") {
+    sendETH(Value.value, TargetAddress.value)
+      .then((data) => {
+        DG.success({
+          title: "Error",
+          content: "Please type the transaction information",
+          positiveText: "OK!",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+}
 </script>
 
 <template>
@@ -74,7 +105,7 @@ function connect() {
     <n-input-number class="input" v-model:value="Value" placeholder="Value" />
     <div class="wallet">
       <n-input-group v-if="isConnected">
-        <n-button>Transfer</n-button>
+        <n-button @click="send">Transfer</n-button>
         <n-input disabled v-model:value="walletAddress"></n-input>
       </n-input-group>
       <n-button v-else @click="connect">Connect to wallet</n-button>
