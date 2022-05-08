@@ -1,0 +1,1 @@
+import{d as o,b8 as t,o as e,c as r,b3 as a}from"./index.f8157fbb.js";import{_ as n}from"./transfer-tool.117383a4.js";const f=o({setup(c){const s=t().params.id.toString();return(i,p)=>(e(),r(n,{"address-to":a(s)},null,8,["address-to"]))}});export{f as default};
