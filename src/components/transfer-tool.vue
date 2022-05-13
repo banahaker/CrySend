@@ -146,7 +146,7 @@ function send() {
 
   h1 {
     font-size: 1.5rem;
-    color: #2359ec;
+    color: #89dba3;
     margin-bottom: 10px;
     span {
       color: #ffffff;
